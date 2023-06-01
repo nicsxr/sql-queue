@@ -1,6 +1,7 @@
 import { Database } from "sqlite3";
 import { DbManager } from "./dbManager";
 import { TaskStatus } from "./enums/taskStatus";
+import { performance } from 'perf_hooks'
 
 export class Queue {
     dbPath: string
@@ -19,12 +20,16 @@ export class Queue {
 
 
     async add(execFunc: any, args: any[], description: string = '') {
+        var startTime = performance.now()
         try {
             var taskId = await this.dbManager.addTask(description)
             await execFunc(...args)
-            this.dbManager.updateTask(taskId, TaskStatus.Finished)
+            var executionTime = performance.now() - startTime
+            console.log("task finished - " + taskId)
+            this.dbManager.updateTask(taskId, TaskStatus.Finished, executionTime)
         } catch (error) {
-            this.dbManager.updateTask(taskId, TaskStatus.Failed)
+            var executionTime = performance.now() - startTime
+            this.dbManager.updateTask(taskId, TaskStatus.Failed, executionTime)
         }
     }
 
