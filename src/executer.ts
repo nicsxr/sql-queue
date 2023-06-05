@@ -1,4 +1,4 @@
-export async function executeFunction(taskId: string ,execFunc: any, args: any[] = [], description: string = ''): Promise<boolean> {
+export async function executeFunction(taskId: string ,execFunc: any, args: any[] = [], info: string = ''): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
         try {
             console.log("func start")

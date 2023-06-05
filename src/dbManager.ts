@@ -15,7 +15,7 @@ export class DbManager {
         this.db.exec(`CREATE TABLE IF NOT EXISTS "${this.tableName}" (
             "id"	INTEGER NOT NULL UNIQUE,
             "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP,
-            "description"	TEXT,
+            "info"	TEXT,
             "status"	INTEGER NOT NULL DEFAULT 0,
             "comment"	TEXT,
             "executionTime" INTEGER,
@@ -25,9 +25,9 @@ export class DbManager {
         })
     }
 
-    addTask(description=''): Promise<string> {
+    addTask(info=''): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            this.db.run(`INSERT INTO ${this.tableName} (description) VALUES ("${description}")`, function(err) {
+            this.db.run(`INSERT INTO ${this.tableName} (info) VALUES ("${info}")`, function(err) {
                 if (err) reject(err)
                 resolve(this.lastID.toString())
             })
@@ -46,7 +46,7 @@ export class DbManager {
             this.db.all(`SELECT * FROM ${this.tableName}`, function(err, rows: any) {  
                 if(err) reject(err)
                 rows.forEach(function (row: any) {  
-                    tasks.push(new Task(row.id, row.description, row.status, row.comment, row.executionTime))
+                    tasks.push(new Task(row.id, row.info, row.status, row.comment, row.executionTime))
                 })
                 resolve(tasks)
             })
@@ -58,7 +58,7 @@ export class DbManager {
             let tasks : Task[] = []
             this.db.get(`SELECT * FROM ${this.tableName} where id=${id}`, function(err, row: any) {  
                 if(err) reject(err)
-                new Task(row.id, row.description, row.status, row.comment, row.executionTime)
+                new Task(row.id, row.info, row.status, row.comment, row.executionTime)
                 resolve(tasks)
             })
         })

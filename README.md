@@ -22,7 +22,7 @@ queue = new Queue('./db.db')
 It takes several parameters:
 - execFuntion - function that needs to be executed asynchronously (required)
 - args[] - array of arguments that function takes (optional)
-- description - description of task (optional)
+- info - information about task (optional)
 
 ```
     var taskId = await queue.add(function delayFunction(delayTime){
