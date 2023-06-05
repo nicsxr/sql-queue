@@ -32,20 +32,20 @@ export class Queue {
      * Adds a task to the queue.
      * @param {Function} execFunc - The function to execute as the task.
      * @param {any[]} args - The arguments to pass to the function. (optional)
-     * @param {string} [description=''] - The description of the task. (optional)
+     * @param {string} [info=''] - Information about the task. (optional)
      * @returns {Promise<void>}
      */
-    async add(execFunc: any, args: any[] = [], description: string = ''): Promise<string> {
+    async add(execFunc: any, args: any[] = [], info: string = ''): Promise<string> {
         var startTime = performance.now()
         var taskId = ''
         try {
-            var taskId = await this.dbManager.addTask(description)
+            var taskId = await this.dbManager.addTask(info)
         } catch (error) {
             
         }
 
         if (taskId != ''){
-            executeFunction(taskId, execFunc, args, description).then((res: boolean) => {
+            executeFunction(taskId, execFunc, args, info).then((res: boolean) => {
                 var executionTime = performance.now() - startTime
                 if (res == true) 
                     this.dbManager.updateTask(taskId, TaskStatus.Finished, executionTime)
