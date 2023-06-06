@@ -57,13 +57,12 @@ export class DbManager {
         })
     }
 
-    getTaskById(id: number): Promise<Task[]> {
-        return new Promise<Task[]>((resolve, reject) => {
-            let tasks : Task[] = []
+    getTaskById(id: number): Promise<Task> {
+        return new Promise<Task>((resolve, reject) => {
             this.db.get(`SELECT * FROM ${this.tableName} where id="${id}"`, function(err, row: any) {  
                 if(err) reject(err)
-                new Task(row.id.toString(), row.info, row.status, row.comment, row.executionTime)
-                resolve(tasks)
+                let task = new Task(row.id.toString(), row.info, row.status, row.comment, row.executionTime)
+                resolve(task)
             })
         })
     }
