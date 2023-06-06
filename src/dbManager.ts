@@ -5,29 +5,33 @@ import { Task } from "./models/task"
 export class DbManager {
     db: Database
     tableName: string
+    autoId: boolean // generate int ids automatically
 
-    constructor(db: Database, tableName: string){
+    constructor(db: Database, tableName: string, autoId=true){
         this.db = db
         this.tableName = tableName
+        this.autoId = autoId
     }
 
     configureDatabase(){
         this.db.exec(`CREATE TABLE IF NOT EXISTS "${this.tableName}" (
-            "id"	INTEGER NOT NULL UNIQUE,
+            "id" ${this.autoId ? 'INTEGER NOT NULL UNIQUE' : 'TEXT NOT NULL'},
             "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP,
             "info"	TEXT,
             "status"	INTEGER NOT NULL DEFAULT 0,
             "comment"	TEXT,
             "executionTime" INTEGER,
-            PRIMARY KEY("id" AUTOINCREMENT)
+            PRIMARY KEY("id" ${this.autoId ? 'AUTOINCREMENT' : ''})
         )`, (err) => {
             if (err) throw err
         })
     }
 
-    addTask(info=''): Promise<string> {
+    addTask(info='', id?: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            this.db.run(`INSERT INTO ${this.tableName} (info) VALUES ("${info}")`, function(err) {
+            let query = id ? `INSERT INTO ${this.tableName} (info, id) VALUES ("${info}", "${id}")` : `INSERT INTO ${this.tableName} (info) VALUES ("${info}")`
+            console.log(query)
+            this.db.run(query, function(err) {
                 if (err) reject(err)
                 resolve(this.lastID.toString())
             })

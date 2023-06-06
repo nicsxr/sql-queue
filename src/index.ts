@@ -13,18 +13,21 @@ export class Queue {
     protected tableName: string
     protected db: Database
     protected dbManager: DbManager
+    protected automaticIdGeneration?: boolean
 
     /**
      * Creates an instance of Queue.
      * @param {string} dbPath - The path to the database file.
      * @param {string} [tableName] - The name of the table in the database. Default name is 'tasks' (optional).
+     * @param {string} autoId - generate automatic integer ids (optional, default - true).
      */
-    constructor(dbPath: string, tableName?: string){
+    constructor(dbPath: string, tableName?: string, autoId?: boolean){
         this.dbPath = dbPath
 
         this.db = new Database(dbPath)
         this.tableName = tableName ? tableName : "tasks"
-        this.dbManager = new DbManager(this.db, this.tableName)
+        this.automaticIdGeneration = autoId
+        this.dbManager = new DbManager(this.db, this.tableName, autoId)
         this.dbManager.configureDatabase()
     }
 
@@ -35,11 +38,11 @@ export class Queue {
      * @param {string} [info=''] - Information about the task. (optional)
      * @returns {Promise<void>}
      */
-    async add(execFunc: any, args: any[] = [], info: string = ''): Promise<string> {
+    async add(execFunc: any, args: any[] = [], info: string = '', id?: string): Promise<string> {
         var startTime = performance.now()
         var taskId = ''
         try {
-            var taskId = await this.dbManager.addTask(info)
+            var taskId = await this.dbManager.addTask(info, id)
         } catch (error) {
             
         }
