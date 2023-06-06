@@ -30,16 +30,15 @@ export class DbManager {
     addTask(info='', id?: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             let query = id ? `INSERT INTO ${this.tableName} (info, id) VALUES ("${info}", "${id}")` : `INSERT INTO ${this.tableName} (info) VALUES ("${info}")`
-            console.log(query)
             this.db.run(query, function(err) {
                 if (err) reject(err)
-                resolve(this.lastID.toString())
+                resolve(id ? id : this.lastID.toString())
             })
         })
     }
 
     updateTask(id: string, status: TaskStatus, executionTime: number){
-        this.db.run(`UPDATE ${this.tableName} SET status=${status}, executionTime=${Math.floor(executionTime)} WHERE id=${id}`, function(err) {
+        this.db.run(`UPDATE ${this.tableName} SET status=${status}, executionTime=${Math.floor(executionTime)} WHERE id="${id}"`, function(err) {
             if (err) throw err
         })
     }

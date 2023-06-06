@@ -50,7 +50,7 @@ export class Queue {
         if (taskId != ''){
             executeFunction(taskId, execFunc, args, info).then((res: boolean) => {
                 var executionTime = performance.now() - startTime
-                if (res == true) 
+                if (res == true)
                     this.dbManager.updateTask(taskId, TaskStatus.Finished, executionTime)
                 else
                     this.dbManager.updateTask(taskId, TaskStatus.Failed, executionTime)
