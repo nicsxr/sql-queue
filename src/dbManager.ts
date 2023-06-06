@@ -50,7 +50,7 @@ export class DbManager {
             this.db.all(`SELECT * FROM ${this.tableName}`, function(err, rows: any) {  
                 if(err) reject(err)
                 rows.forEach(function (row: any) {  
-                    tasks.push(new Task(row.id, row.info, row.status, row.comment, row.executionTime))
+                    tasks.push(new Task(row.id.toString(), row.info, row.status, row.comment, row.executionTime))
                 })
                 resolve(tasks)
             })
@@ -62,7 +62,7 @@ export class DbManager {
             let tasks : Task[] = []
             this.db.get(`SELECT * FROM ${this.tableName} where id=${id}`, function(err, row: any) {  
                 if(err) reject(err)
-                new Task(row.id, row.info, row.status, row.comment, row.executionTime)
+                new Task(row.id.toString(), row.info, row.status, row.comment, row.executionTime)
                 resolve(tasks)
             })
         })

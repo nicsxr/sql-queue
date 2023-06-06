@@ -1,11 +1,11 @@
 export class Task {
-    id: number
+    id: string
     info: string
     status: number
     comment: string
     executionTime: number
     
-    constructor (id: number, info: string, status: number, comment: string, executionTime: number){
+    constructor (id: string, info: string, status: number, comment: string, executionTime: number){
         this.id = id,
         this.info = info,
         this.status = status,
